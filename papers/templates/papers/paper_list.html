@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Paper List{% endblock %}
+
+{% block extracss %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/paper_list.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <h1>Papers: </h1>
+    <table>
+    <tr>
+        <th>Name</th>
+        <th>Subject</th>
+        <th>Author</th>
+        <th>Year</th>
+        {% if user.is_authenticated %}
+            <th>Presenter</th>
+        {% endif %}
+    </tr>
+    {% for paper in paper_list %}
+        <tr>
+        <td><a href="{{ paper.link }}" title="{{ paper.title }}">{{ paper.name }}</a></td>
+        <td>{{ paper.display_subject }}</td>
+        <td>{{ paper.author }}</td>
+        <td>{{ paper.year }}</td>
+        {% if user.is_authenticated %}
+            <td>{% if paper.available %}
+                <a href="{% url 'select_paper' paper.id %}" onclick="submit">Available</a>
+            {% else %}
+                {{ paper.presenter.username }}
+            {% endif %}</td>
+        {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
